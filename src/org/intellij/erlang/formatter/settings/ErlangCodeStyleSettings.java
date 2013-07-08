@@ -23,6 +23,8 @@ public class ErlangCodeStyleSettings extends CustomCodeStyleSettings {
   public boolean ALIGN_MULTILINE_BLOCK = false;
   public boolean ALIGN_FUNCTION_CLAUSES = false;
   public boolean INDENT_RELATIVE = true;
+  public boolean ENABLE_EMACS_INDENTATION_TWEAKS = false;
+  public boolean ALIGN_FUN_EXPRESSION_CLAUSE_BODY = false;
 
   protected ErlangCodeStyleSettings(CodeStyleSettings container) {
     super("ErlangCodeStyleSettings", container);

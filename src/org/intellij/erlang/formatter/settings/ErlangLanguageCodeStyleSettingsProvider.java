@@ -109,7 +109,10 @@ public class ErlangLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSe
       );
       consumer.showCustomOption(ErlangCodeStyleSettings.class, "ALIGN_MULTILINE_BLOCK", "Blocks (fun...end, etc)", "Alignment");
       consumer.showCustomOption(ErlangCodeStyleSettings.class, "ALIGN_FUNCTION_CLAUSES", "Function clauses", "Alignment");
+      consumer.showCustomOption(ErlangCodeStyleSettings.class, "ALIGN_FUN_EXPRESSION_CLAUSE_BODY", "Fun expression clause body", "Alignment");
+
       consumer.showCustomOption(ErlangCodeStyleSettings.class, "INDENT_RELATIVE", "Honor relative", null);
+      consumer.showCustomOption(ErlangCodeStyleSettings.class, "ENABLE_EMACS_INDENTATION_TWEAKS", "Emacs-like indentation", null);
     }
   }
 

@@ -244,6 +244,8 @@
         <codeStyleSettingsProvider implementation="org.intellij.erlang.formatter.settings.ErlangCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider implementation="org.intellij.erlang.formatter.settings.ErlangLanguageCodeStyleSettingsProvider"/>
 
+        <predefinedCodeStyle implementation="org.intellij.erlang.formatter.settings.ErlangEmacsCodeStyle"/>
+
         <moduleConfigurationEditorProvider implementation="org.intellij.erlang.configuration.DefaultModuleEditorsProvider" order="first"/>
 
         <codeInsight.lineMarkerProvider language="Erlang" implementationClass="org.intellij.erlang.marker.ErlangRecursiveCallLineMarkerProvider"/>

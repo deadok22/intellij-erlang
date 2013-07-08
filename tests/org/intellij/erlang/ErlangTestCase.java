@@ -75,6 +75,7 @@ public class ErlangTestCase extends TestCase {
     suite.addTestSuite(ErlangInlineVariableTest.class);
     suite.addTestSuite(ErlangGotoSuperTest.class);
     suite.addTestSuite(ErlangEnterHandlerTest.class);
+    //suite.addTestSuite(ErlangEmacsLikeFormattingTest.class);
     suite.addTestSuite(ErlangPerformanceTest.class);
     return suite;
   }

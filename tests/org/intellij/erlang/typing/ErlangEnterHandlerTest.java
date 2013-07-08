@@ -36,4 +36,11 @@ public class ErlangEnterHandlerTest extends ErlangLightPlatformCodeInsightFixtur
     myFixture.type('\n');
     myFixture.checkResultByFile(getTestName(true) + "-after.erl");
   }
+
+
+  @Override
+  protected void setUp() throws Exception {
+    System.setProperty("idea.platform.prefix", "Idea");
+    super.setUp();
+  }
 }

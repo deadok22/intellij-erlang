@@ -118,6 +118,20 @@ public class ErlangFormattingBlock extends AbstractBlock {
     Alignment fromStrategy = calculateAlignmentFromStrategy(parent, child);
     if (fromStrategy != null) return fromStrategy;
 
+    if (myErlangSettings.ALIGN_FUN_EXPRESSION_CLAUSE_BODY) {
+      ASTNode grandParent = parent.getTreeParent();
+      if (grandParent != null && grandParent.getElementType() == ERL_FUN_CLAUSE && parentType == ERL_CLAUSE_BODY) {
+        return baseAlignment;
+      }
+    }
+
+    if (myErlangSettings.ALIGN_FUN_EXPRESSION_CLAUSE_BODY) {
+      ASTNode grandParent = parent.getTreeParent();
+      if (grandParent != null && grandParent.getElementType() == ERL_FUN_CLAUSE && parentType == ERL_CLAUSE_BODY && childType != ERL_ARROW) {
+        return baseAlignment;
+      }
+    }
+
     if (myErlangSettings.ALIGN_MULTILINE_BLOCK) {
       if (parentType == ERL_PARENTHESIZED_EXPRESSION || parentType == ERL_ARGUMENT_LIST
         || parentType == ERL_ARGUMENT_DEFINITION_LIST || parentType == ERL_FUN_TYPE) {
@@ -139,6 +153,22 @@ public class ErlangFormattingBlock extends AbstractBlock {
         if (childType == ERL_TYPE_SIG) {
           return baseAlignment;
         }
+      }
+      if (myErlangSettings.ENABLE_EMACS_INDENTATION_TWEAKS && parentType == ERL_GUARD) {
+        return baseAlignment;
+      }
+      if (parentType == ERL_FUN_CLAUSES) {
+        return baseAlignment;
+      }
+      if (myErlangSettings.ENABLE_EMACS_INDENTATION_TWEAKS) {
+        if (parentType == ERL_GUARD || parentType == ERL_IF_CLAUSES || parentType == ERL_LC_EXPRS || parentType == ERL_TOP_TYPE) return baseAlignment;
+        ASTNode grandParent = parent.getTreeParent();
+        if (grandParent != null && grandParent.getElementType() == ERL_IF_CLAUSE && parentType == ERL_CLAUSE_BODY && childType != ERL_ARROW) {
+          return baseAlignment;
+        }
+      }
+      if (parentType == ERL_FUN_CLAUSES) {
+        return baseAlignment;
       }
       PsiElement psi = parent.getPsi();
       if (psi instanceof ErlangFakeBinaryExpression) {
@@ -190,7 +220,7 @@ public class ErlangFormattingBlock extends AbstractBlock {
 
     IElementType type = newChildIndex > 0 ? getIElementType(newChildIndex) : null;
     if (type != null) childIndent = getChildIndent(type, newChildIndex);
-    
+
     return new ChildAttributes(childIndent == null ? Indent.getNoneIndent() : childIndent, null);
   }
 
@@ -230,8 +260,8 @@ public class ErlangFormattingBlock extends AbstractBlock {
     }
 
     if (type == ERL_BEGIN_END_BODY) return Indent.getNoneIndent();
-
     if (type == ERL_TRY_EXPRESSIONS_CLAUSE && newChildIndex == 1) return Indent.getNoneIndent();
+    if (type == ERL_FUN_CLAUSES) return Indent.getNoneIndent();
 
     if (BLOCKS_TOKEN_SET.contains(type) ||
       type == ERL_TYPED_RECORD_FIELDS

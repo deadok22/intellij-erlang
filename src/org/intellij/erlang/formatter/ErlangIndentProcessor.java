@@ -63,6 +63,52 @@ public class ErlangIndentProcessor {
       return Indent.getNoneIndent();
     }
 
+    Indent result = myErlangSettings.ENABLE_EMACS_INDENTATION_TWEAKS ? getEmacsIndent(elementType, parentType, grandfatherType, prevSiblingElementType) : null;
+    result = result == null ? getNormalIndent(node, elementType, parent, parentType, grandfatherType, prevSiblingElementType) : result;
+
+    return result == null ? Indent.getNoneIndent() : result;
+  }
+
+  @Nullable
+  private Indent getEmacsIndent(IElementType elementType, IElementType parentType, @Nullable IElementType grandfatherType, @Nullable IElementType prevSiblingElementType) {
+    if ((parentType == ERL_CR_CLAUSE || parentType == ERL_FUNCTION_CLAUSE || parentType == ERL_TRY_CLAUSE) && elementType == ERL_CLAUSE_GUARD) {
+      return Indent.getSpaceIndent(2, false);
+    }
+    if (parentType == ERL_GUARD && grandfatherType != ERL_IF_CLAUSE) {
+      return Indent.getNormalIndent(true);
+    }
+    if (parentType == ERL_CLAUSE_GUARD) {
+      return Indent.getNoneIndent();
+    }
+    if (parentType == ERL_CLAUSE_BODY && (grandfatherType == ERL_FUN_CLAUSE || grandfatherType == ERL_IF_CLAUSE)) {
+      return Indent.getIndent(Indent.Type.NONE, true, true);
+    }
+    if (parentType == ERL_IF_EXPRESSION && elementType == ERL_IF_CLAUSES) {
+      return Indent.getNormalIndent(myErlangSettings.INDENT_RELATIVE);
+    }
+    if (parentType == ERL_IF_CLAUSES && elementType == ERL_IF_CLAUSE) {
+      return Indent.getIndent(Indent.Type.NONE, true, true);
+    }
+    if (parentType == ERL_LIST_EXPRESSION || parentType == ERL_LIST_COMPREHENSION || parentType == ERL_EXPORT_FUNCTIONS || parentType == ERL_EXPORT_TYPES || parentType == ERL_TYPE) {
+      if (elementType == ERL_BRACKET_LEFT || elementType == ERL_BRACKET_RIGHT || elementType == ERL_BIN_START || elementType == ERL_BIN_END || elementType == ERL_LC_EXPRS) {
+        return myErlangSettings.INDENT_RELATIVE ? Indent.getSpaceIndent(0, true) : Indent.getNoneIndent();
+      }
+      return Indent.getContinuationIndent(true);
+    }
+    if (parentType == ERL_TUPLE_EXPRESSION || parentType == ERL_RECORD_TUPLE || parentType == ERL_TYPED_RECORD_FIELDS || parentType == ERL_RECORD_FIELDS) {
+      if (elementType == ERL_CURLY_LEFT || elementType == ERL_CURLY_RIGHT) {
+        return myErlangSettings.INDENT_RELATIVE ? Indent.getSpaceIndent(0, true) : Indent.getNoneIndent();
+      }
+      return Indent.getIndent(Indent.Type.NORMAL, false, false);
+    }
+    if (parentType == ERL_ASSIGNMENT_EXPRESSION && prevSiblingElementType == ERL_OP_EQ) {
+      return Indent.getNormalIndent(true);
+    }
+    return null;
+  }
+
+  @Nullable
+  private Indent getNormalIndent(ASTNode node, IElementType elementType, ASTNode parent, IElementType parentType, @Nullable IElementType grandfatherType, @Nullable IElementType prevSiblingElementType) {
     if (elementType == ERL_CATCH || elementType == ERL_AFTER) {
       return Indent.getNoneIndent();
     }
@@ -101,7 +147,16 @@ public class ErlangIndentProcessor {
     if (parentType == ERL_BEGIN_END_BODY) {
       return Indent.getNoneIndent();
     }
-    if (parentType == ERL_CASE_EXPRESSION || parentType == ERL_RECEIVE_EXPRESSION || parentType == ERL_TRY_EXPRESSION || parentType == ERL_BEGIN_END_EXPRESSION || parentType == ERL_IF_EXPRESSION) {
+    if (parentType == ERL_FUN_EXPRESSION && elementType == ERL_FUN_CLAUSES) {
+      return Indent.getNormalIndent(myErlangSettings.INDENT_RELATIVE);
+    }
+    if (parentType == ERL_FUN_CLAUSES && elementType == ERL_FUN_CLAUSE) {
+      return Indent.getNoneIndent();
+    }
+    if (parentType == ERL_CASE_EXPRESSION || parentType == ERL_RECEIVE_EXPRESSION ||
+        parentType == ERL_TRY_EXPRESSION || parentType == ERL_BEGIN_END_EXPRESSION ||
+        parentType == ERL_IF_EXPRESSION || parentType == ERL_FUN_EXPRESSION ||
+        parentType == ERL_FUN_CLAUSES) {
       if (elementType == ERL_CR_CLAUSE) {
         return Indent.getNormalIndent(myErlangSettings.INDENT_RELATIVE);
       }
@@ -118,7 +173,7 @@ public class ErlangIndentProcessor {
     if (parent.getPsi() instanceof ErlangExpression && (BIN_OPERATORS.contains(elementType) || BIN_OPERATORS.contains(prevSiblingElementType))) {
       return Indent.getNormalIndent();
     }
-    return Indent.getNoneIndent();
+    return null;
   }
 
   private static boolean needIndent(@Nullable IElementType type) {
