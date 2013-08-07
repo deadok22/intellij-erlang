@@ -6,6 +6,7 @@ import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import org.intellij.erlang.psi.ErlangFile;
 import org.intellij.erlang.psi.ErlangFunction;
+import org.intellij.erlang.psi.impl.ErlangPsiImplUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -45,7 +46,7 @@ class RebarEunitConfigurationUtil {
     Set<String> distinctFunctionNames = ContainerUtil.map2Set(functions, new Function<ErlangFunction, String>() {
       @Override
       public String fun(ErlangFunction function) {
-        return function.getName();
+        return ErlangPsiImplUtil.getQualifiedFunctionName(function);
       }
     });
 
@@ -54,12 +55,18 @@ class RebarEunitConfigurationUtil {
   }
 
   @NotNull
-  static String createDefaultRebarCommand(Collection<ErlangFile> suites, Collection<ErlangFunction> functions, boolean failIfNoSuitesSpecified) {
+  static String createDefaultRebarCommand(Collection<ErlangFile> suites, Collection<ErlangFunction> functions) {
     StringBuilder commandBuilder = new StringBuilder();
     commandBuilder.append("eunit ");
-    if (!appendSuitesOption(commandBuilder, suites) && failIfNoSuitesSpecified) return "";
-    commandBuilder.append(' ');
-    appendTestsOption(commandBuilder, functions);
+
+    if (functions.isEmpty()) {
+      // module tests
+      if (!appendSuitesOption(commandBuilder, suites)) return "";
+    }
+    else {
+      appendTestsOption(commandBuilder, functions);
+    }
+
     return commandBuilder.toString();
   }
 }

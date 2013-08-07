@@ -102,7 +102,7 @@ public class RebarEunitRerunFailedTestsAction extends AbstractRerunFailedTestsAc
           notifyGeneratedTestsFailed(failedGeneratedTests);
         }
 
-        configuration.setCommand(RebarEunitConfigurationUtil.createDefaultRebarCommand(suites, failedTests, false));
+        configuration.setCommand(RebarEunitConfigurationUtil.createDefaultRebarCommand(suites, failedTests));
         configuration.setName("");
         configuration.setSkipDependencies(true);
 

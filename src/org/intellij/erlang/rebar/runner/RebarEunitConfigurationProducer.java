@@ -47,7 +47,7 @@ public class RebarEunitConfigurationProducer extends RuntimeConfigurationProduce
 
     Collection<ErlangFunction> functions = ErlangUnitTestElementUtil.findFunctionTestElements(psiElement);
     Collection<ErlangFile> suites = ErlangUnitTestElementUtil.findFileTestElements(context.getProject(), context.getDataContext());
-    String command = RebarEunitConfigurationUtil.createDefaultRebarCommand(suites, functions, true);
+    String command = RebarEunitConfigurationUtil.createDefaultRebarCommand(suites, functions);
 
     if (command.isEmpty()) return null;
 
