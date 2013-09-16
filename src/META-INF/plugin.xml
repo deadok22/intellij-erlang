@@ -258,6 +258,8 @@
 
         <gotoSymbolContributor implementation="org.intellij.erlang.go.ErlangSymbolContributor"/>
 
+        <statementUpDownMover implementation="org.intellij.erlang.refactor.ErlangUpDownMover" id="ErlangMover" order="before statement"/>
+
         <!--errors-->
         <localInspection language="Erlang" shortName="ErlangUnboundVariable" displayName="Unbound variable"
                          groupName="Erlang" enabledByDefault="true" level="ERROR"
@@ -331,7 +333,7 @@
           <className>org.intellij.erlang.intention.ErlangExportTypeIntention</className>
           <category>Erlang</category>
         </intentionAction>
-      
+
         <additionalTextAttributes scheme="Default" file="colorSchemes/ErlangDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ErlangDarcula.xml"/>
     </extensions>
