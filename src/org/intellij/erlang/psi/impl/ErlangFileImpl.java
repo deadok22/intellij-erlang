@@ -332,9 +332,7 @@ public class ErlangFileImpl extends PsiFileBase implements ErlangFile, PsiNameId
   public ErlangFunction getFunction(@NotNull String name, final int argsCount) {
     initFunctionsMap();
     MultiMap<String, ErlangFunction> value = myFunctionsMap.getValue();
-    ErlangFunction byName = getFunctionFromMap(value, name, argsCount);
-    ErlangFunction byUnquote = byName == null ? getFunctionFromMap(value, StringUtil.unquoteString(name), argsCount) : byName;
-    return byUnquote == null ? getFunctionFromMap(value, "'" + name + "'", argsCount) : byUnquote;
+    return getFunctionFromMap(value, name, argsCount);
   }
 
   private void initFunctionsMap() {
@@ -356,7 +354,6 @@ public class ErlangFileImpl extends PsiFileBase implements ErlangFile, PsiNameId
   @NotNull
   public Collection<ErlangFunction> getFunctionsByName(@NotNull String name) {
     initFunctionsMap();
-    // todo: quotation
     return myFunctionsMap.getValue().get(name);
   }
 
