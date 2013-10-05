@@ -28,6 +28,7 @@ public class ErlangHighlightingTest extends ErlangHighlightingTestBase {
   public void testRecord()            { doTest(); }
   public void testQuotesInRecFields() { doTest(); }
   public void testQuotesInFunctions() { doTest(); }
+  public void testQuotesInRecords()   { doTest(); }
   public void test23()                { doTest(); }
   public void testRecordsResolve()    { doTest(); }
   public void testExportResolve()     { doTest(); }

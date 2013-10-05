@@ -630,7 +630,7 @@ public class ErlangPsiImplUtil {
     if (stub != null) return StringUtil.notNullize(stub.getName());
     ErlangQAtom atom = o.getQAtom();
     if (atom == null) return "";
-    return atom.getText();
+    return StringUtil.unquoteString(atom.getText());
   }
 
   @NotNull
@@ -666,7 +666,7 @@ public class ErlangPsiImplUtil {
   }
 
   public static ErlangRecordReferenceImpl<ErlangQAtom> createRecordRef(@NotNull ErlangQAtom atom) {
-    return new ErlangRecordReferenceImpl<ErlangQAtom>(atom, TextRange.from(0, atom.getMacros() == null ? atom.getTextLength() : 1), atom.getText());
+    return new ErlangRecordReferenceImpl<ErlangQAtom>(atom, getTextRangeForReference(atom), StringUtil.unquoteString(atom.getText()));
   }
 
   @Nullable
