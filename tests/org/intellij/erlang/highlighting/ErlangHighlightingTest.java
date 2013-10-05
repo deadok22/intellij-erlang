@@ -27,6 +27,7 @@ public class ErlangHighlightingTest extends ErlangHighlightingTestBase {
   public void testMp4Mux()            { doTest(); }
   public void testRecord()            { doTest(); }
   public void testQuoteUnquote()      { doTest(); }
+  public void testQuotesInRecFields() { doTest(); }
   public void test23()                { doTest(); }
   public void testRecordsResolve()    { doTest(); }
   public void testExportResolve()     { doTest(); }

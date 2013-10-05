@@ -201,28 +201,7 @@ public class ErlangPsiImplUtil {
   @Nullable
   private static PsiReference getRecordFieldReference(@Nullable ErlangQAtom atom) {
     if (atom == null) return null;
-    return new ErlangAtomBasedReferenceImpl<ErlangQAtom>(atom, TextRange.from(0, atom.getTextLength()), atom.getText()) {
-      @Override
-      public PsiElement resolve() {
-        Pair<List<ErlangTypedExpr>, List<ErlangQAtom>> recordFields = getRecordFields(myElement);
-        for (ErlangTypedExpr field : recordFields.first) {
-          if (field.getName().equals(myReferenceName)) return field;
-        }
-        for (ErlangQAtom qAtom : recordFields.second) {
-          PsiElement aa = qAtom.getAtom();
-          if (aa != null) {
-            if (myReferenceName.equals(aa.getText())) return qAtom;
-          }
-        }
-        return null;
-      }
-
-      @NotNull
-      @Override
-      public Object[] getVariants() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
-      }
-    };
+    return new ErlangRecordFieldReferenceImpl<ErlangQAtom>(atom, getTextRangeForReference(atom), StringUtil.unquoteString(atom.getText()));
   }
 
   @Nullable
@@ -1121,7 +1100,7 @@ public class ErlangPsiImplUtil {
 
   @NotNull
   public static String getName(ErlangTypedExpr o) {
-    return o.getNameIdentifier().getText();
+    return StringUtil.unquoteString(o.getNameIdentifier().getText());
   }
 
   public static PsiElement setName(ErlangTypedExpr o, String newName) {
@@ -1555,5 +1534,20 @@ public class ErlangPsiImplUtil {
       if (arity != myArity) return false;
       return true;
     }
+  }
+
+  private static TextRange getTextRangeForReference(ErlangQAtom qAtom) {
+    PsiElement atom = qAtom.getAtom();
+    if (atom != null) {
+      String atomText = atom.getText();
+      if (StringUtil.isQuotedString(atomText)) {
+        return TextRange.from(1, qAtom.getTextLength() - 2);
+      }
+    }
+    return TextRange.from(0, qAtom.getTextLength());
+  }
+
+  public static boolean equalAsAtoms(@NotNull String atom1, @NotNull String atom2) {
+    return atom1.equals(atom2) || StringUtil.unquoteString(atom1).equals(StringUtil.unquoteString(atom2));
   }
 }
