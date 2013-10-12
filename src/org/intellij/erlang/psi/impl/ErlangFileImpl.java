@@ -437,11 +437,7 @@ public class ErlangFileImpl extends PsiFileBase implements ErlangFile, PsiNameId
         }
       }, false);
     }
-    // todo: cleanup
-    Map<String, ErlangTypeDefinition> value = myTypeMap.getValue();
-    ErlangTypeDefinition byName = value.get(name);
-    ErlangTypeDefinition byUnquote = byName == null ? value.get(StringUtil.unquoteString(name)) : byName;
-    return byUnquote == null ? value.get("'" + name + "'") : byUnquote;
+    return myTypeMap.getValue().get(name);
   }
 
   @NotNull

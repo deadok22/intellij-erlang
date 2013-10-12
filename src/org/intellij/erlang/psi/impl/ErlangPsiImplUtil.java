@@ -317,7 +317,7 @@ public class ErlangPsiImplUtil {
   @NotNull
   private static PsiReference getModuleReference(ErlangCompositeElement o, ErlangQAtom atom) {
     ErlangModuleRef moduleRef = PsiTreeUtil.getPrevSiblingOfType(o, ErlangModuleRef.class);
-    return new ErlangTypeReferenceImpl<ErlangQAtom>(atom, moduleRef, TextRange.from(0, atom.getTextLength()), atom.getText());
+    return new ErlangTypeReferenceImpl<ErlangQAtom>(atom, moduleRef, getTextRangeForReference(atom), StringUtil.unquoteString(atom.getText()));
   }
 
   @Nullable
@@ -1277,7 +1277,7 @@ public class ErlangPsiImplUtil {
   public static String getName(ErlangTypeDefinition o) {
     ErlangTypeDefinitionStub stub = o.getStub();
     if (stub != null) return StringUtil.notNullize(stub.getName());
-    return o.getNameIdentifier().getText();
+    return StringUtil.unquoteString(o.getNameIdentifier().getText());
   }
 
   @Nullable
