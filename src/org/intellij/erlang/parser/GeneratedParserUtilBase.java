@@ -38,6 +38,7 @@ import com.intellij.util.Function;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.LimitedPool;
 import gnu.trove.THashSet;
+import org.intellij.erlang.parser.preprocessor.ErlangForeignLeafType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import static org.intellij.erlang.ErlangTypes.ERL_QMARK;
 
 /**
  * @author gregsh
@@ -85,6 +88,9 @@ public class GeneratedParserUtilBase {
       builder_.error("Maximum recursion level (" + 1000 + ") reached in " + funcName_);
       return false;
     }
+    //TODO try not to parse the macro reference - make it a single token which is marked as whitespace and make it right-bound.
+    //TODO after that you can try to make name resolution work.
+    if (!funcName_.equals("macros") && nextTokenIs(builder_, ERL_QMARK)) ErlangParser.macros(builder_, level_);
     return true;
   }
 
@@ -612,6 +618,16 @@ public class GeneratedParserUtilBase {
 
     public Lexer getLexer() {
       return ((PsiBuilderImpl)myDelegate).getLexer();
+    }
+
+    @Nullable
+    @Override
+    public IElementType getTokenType() {
+      IElementType tokenType = super.getTokenType();
+      while (tokenType instanceof ErlangForeignLeafType) {
+        tokenType = ((ErlangForeignLeafType) tokenType).getDelegate();
+      }
+      return tokenType;
     }
   }
 
