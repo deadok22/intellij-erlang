@@ -36,6 +36,7 @@ import org.intellij.erlang.highlighting.ErlangHighlightingTest;
 import org.intellij.erlang.highlighting.ErlangSmallIdeHighlightingTest;
 import org.intellij.erlang.highlighting.generate.ErlangGenerateTest;
 import org.intellij.erlang.info.ErlangParameterInfoHandlerTest;
+import org.intellij.erlang.lexer.ErlangFormsLexerTest;
 import org.intellij.erlang.navigation.ErlangGotoSuperTest;
 import org.intellij.erlang.parser.ErlangAppParserTest;
 import org.intellij.erlang.parser.ErlangParserTest;
@@ -61,6 +62,7 @@ public class ErlangTestCase extends TestCase {
   public static TestSuite suite() {
     TestSuite suite = new TestSuite();
     suite.addTestSuite(ErlangParserTest.class);
+    suite.addTestSuite(ErlangFormsLexerTest.class);
     suite.addTestSuite(ErlangAppParserTest.class);
     suite.addTestSuite(ErlangHighlightingTest.class);
     suite.addTestSuite(ErlangSmallIdeHighlightingTest.class);
