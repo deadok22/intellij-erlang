@@ -67,10 +67,8 @@ public class ErlangHighlightingTest extends ErlangHighlightingTestBase {
   public void test365()               { doTest(); }
   public void test387()               { doTest(); }
 
-  public void testUnresolvedMacros()  {
-    enableUnresolvedMacroInspection();
-    doTest();
-  }
+  public void testUnresolvedMacros()         { enableUnresolvedMacroInspection(); doTest(); }
+  public void testMacroWithArityResolution() { enableUnresolvedMacroInspection(); doTest(); }
 
   public void test176() {                    
     myFixture.configureByText("aaa.hrl", "foo() -> ok.");
