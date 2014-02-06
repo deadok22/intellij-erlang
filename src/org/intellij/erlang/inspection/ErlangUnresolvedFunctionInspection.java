@@ -53,7 +53,8 @@ public class ErlangUnresolvedFunctionInspection extends ErlangInspectionBase {
             ErlangModuleRef moduleRef = ((ErlangGlobalFunctionCallExpression) parent).getModuleRef();
             if (moduleRef != null) {
               if (moduleRef.getQAtom().getMacros() != null) return;
-              String moduleName = moduleRef.getText();
+              PsiElement moduleAtom = moduleRef.getQAtom().getAtom();
+              String moduleName = moduleAtom != null ? moduleAtom.getText() : moduleRef.getText();
               if (ErlangBifTable.isBif(moduleName, name, arity)) return;
               signature = moduleName + ":" + signature;
             }
@@ -63,7 +64,7 @@ public class ErlangUnresolvedFunctionInspection extends ErlangInspectionBase {
             new LocalQuickFix[]{} :
             new LocalQuickFix[]{new ErlangCreateFunctionQuickFix(name, arity)};
 
-          problemsHolder.registerProblem(o.getNameIdentifier(), "Unresolved function " + "'" + signature + "'", qfs);
+          registerProblemForeignTokensAware(problemsHolder, o.getNameIdentifier(), "Unresolved function " + "'" + signature + "'", qfs);
         }
       }
 
@@ -75,7 +76,7 @@ public class ErlangUnresolvedFunctionInspection extends ErlangInspectionBase {
           if (o.getQAtom().getMacros() != null) return;
           ErlangFunctionReferenceImpl r = (ErlangFunctionReferenceImpl) reference;
           LocalQuickFix[] qfs = getQuickFixes(o, new ErlangCreateFunctionQuickFix(r.getName(), r.getArity()));
-          problemsHolder.registerProblem(o.getQAtom(), "Unresolved function " + "'" + r.getSignature() + "'", qfs);
+          registerProblemForeignTokensAware(problemsHolder, o.getQAtom(), "Unresolved function " + "'" + r.getSignature() + "'", qfs);
         }
       }
 
@@ -87,7 +88,7 @@ public class ErlangUnresolvedFunctionInspection extends ErlangInspectionBase {
           if (o.getQAtom().getMacros() != null) return;
           ErlangFunctionReferenceImpl r = (ErlangFunctionReferenceImpl) reference;
           LocalQuickFix[] qfs = getQuickFixes(o, new ErlangCreateFunctionQuickFix(r.getName(), r.getArity()));
-          problemsHolder.registerProblem(o.getQAtom(), "Unresolved function " + "'" + r.getSignature() + "'", qfs);
+          registerProblemForeignTokensAware(problemsHolder, o.getQAtom(), "Unresolved function " + "'" + r.getSignature() + "'", qfs);
         }
       }
 

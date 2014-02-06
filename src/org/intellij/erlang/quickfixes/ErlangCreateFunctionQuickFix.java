@@ -47,9 +47,10 @@ public class ErlangCreateFunctionQuickFix extends LocalQuickFixBase {
 
   @Override
   public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
+    PsiElement problemElement = ErlangQuickFixBase.getProblemElementMacroAware(descriptor);
     //noinspection unchecked
     PsiElement call = PsiTreeUtil.getContextOfType(
-      descriptor.getPsiElement(),
+      problemElement,
       false,
       ErlangFunctionCallExpression.class,
       ErlangSpecFun.class,
@@ -59,7 +60,7 @@ public class ErlangCreateFunctionQuickFix extends LocalQuickFixBase {
     if (call != null) {
       //noinspection unchecked
       PsiElement topmost = PsiTreeUtil.getParentOfType(call,
-        ErlangFunction.class, ErlangRecordDefinition.class, ErlangMacros.class, ErlangAttribute.class, ErlangModule.class);
+        ErlangFunction.class, ErlangRecordDefinition.class, ErlangAttribute.class, ErlangModule.class);
 
       if (call instanceof ErlangExportFunction) {
         topmost = call.getContainingFile().getLastChild();
