@@ -18,6 +18,7 @@ package org.intellij.erlang.highlighting;
 
 import com.intellij.codeInsight.daemon.DaemonAnalyzerTestCase;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.io.FileUtil;
@@ -49,12 +50,17 @@ public class ErlangConsoleViewTest extends DaemonAnalyzerTestCase {
     final PsiDocumentManager instance = PsiDocumentManager.getInstance(getProject());
     final Document document = instance.getDocument(file);
     assert document != null;
-    ApplicationManager.getApplication().runWriteAction(new Runnable() {
+    CommandProcessor.getInstance().executeCommand(myProject, new Runnable() {
       @Override
       public void run() {
-        document.insertString(0, "C = A + B.");
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+          @Override
+          public void run() {
+            document.insertString(0, "C = A + B.");
+          }
+        });
       }
-    });
+    }, "Insert string", null);
     instance.commitDocument(document);
     final HashMap<String, ErlangQVar> map = new HashMap<String, ErlangQVar>();
     map.put("A", (ErlangQVar) ErlangElementFactory.createQVarFromText(getProject(), "A"));

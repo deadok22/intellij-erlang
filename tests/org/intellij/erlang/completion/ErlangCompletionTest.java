@@ -120,7 +120,7 @@ public class ErlangCompletionTest extends ErlangCompletionTestBase {
 
   public void testTypesInTypeDeclaration() throws Throwable {
     doTestInclude(
-      "-type foo() :: <caret>atom().\n" +
+      "-type foo() :: atom().\n" +
         "-type buz() :: string().\n" +
         "-type tes() :: <caret>)", "foo", "buz", "atom", "no_return");
   }
