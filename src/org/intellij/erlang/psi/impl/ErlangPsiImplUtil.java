@@ -1466,6 +1466,13 @@ public class ErlangPsiImplUtil {
       ErlangParserDefinition.COMMENTS.contains(elementType);
   }
 
+  @NotNull
+  public static ErlangArgumentList getArgumentList(ErlangMacroCallArgumentList erlangMacroCallArgumentList) {
+    ErlangArgumentList argumentsList = PsiTreeUtil.getChildOfType(erlangMacroCallArgumentList, ErlangArgumentList.class);
+    assert argumentsList != null;
+    return argumentsList;
+  }
+
   public static class ErlangFunctionCallParameter<T extends PsiElement> extends PatternCondition<T> {
     private final String myFunName;
     private final String myModule;
