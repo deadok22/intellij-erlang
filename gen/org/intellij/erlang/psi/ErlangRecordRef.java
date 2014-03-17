@@ -8,8 +8,11 @@ import com.intellij.psi.PsiReference;
 
 public interface ErlangRecordRef extends ErlangCompositeElement {
 
-  @NotNull
+  @Nullable
   ErlangQAtom getQAtom();
+
+  @Nullable
+  ErlangQVar getQVar();
 
   @Nullable
   PsiReference getReference();

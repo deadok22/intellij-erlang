@@ -36,6 +36,12 @@ public class ErlangRecordFieldImpl extends ErlangCompositeElementImpl implements
 
   @Override
   @Nullable
+  public ErlangQVar getQVar() {
+    return findChildByClass(ErlangQVar.class);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getDot() {
     return findChildByType(ERL_DOT);
   }
@@ -44,12 +50,6 @@ public class ErlangRecordFieldImpl extends ErlangCompositeElementImpl implements
   @Nullable
   public PsiElement getOpEq() {
     return findChildByType(ERL_OP_EQ);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getUniPattern() {
-    return findChildByType(ERL_UNI_PATTERN);
   }
 
   @Nullable

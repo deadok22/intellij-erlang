@@ -33,7 +33,8 @@ public class ErlangUnresolvedRecordInspection extends ErlangInspectionBase {
     file.accept(new ErlangRecursiveVisitor() {
       @Override
       public void visitRecordRef(@NotNull ErlangRecordRef o) {
-        if (o.getQAtom().getMacros() != null) return;
+        ErlangQAtom qAtom = o.getQAtom();
+        if (qAtom == null || qAtom.getMacros() != null) return;
         process(o, problemsHolder);
       }
 

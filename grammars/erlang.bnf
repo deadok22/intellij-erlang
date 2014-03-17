@@ -418,15 +418,15 @@ record_expression ::= expression record_tail {
   methods = [getReferenceInternal]
 }
 private record_tail ::= record_head (record_field_ref | record_tuple | ()) {pin=1}
-private record_head ::= record_head_classic | macros &('{'|'.' q_atom &(!('(')))
+private record_head ::= record_head_classic | macros &('{'|record_field_ref &(!('(')))
 private record_head_classic ::= record_hash record_ref {pin=1}
 private record_hash ::= '#' &(!'{')
-record_field_ref ::= '.' q_atom {pin=1 elementType="record_field"}
-record_ref ::= q_atom {methods = [getReference]}
+record_field_ref ::= '.' (q_atom | q_var) {pin=1 elementType="record_field"}
+record_ref ::= q_atom | q_var {methods = [getReference]}
 
 record_tuple ::= '{' record_fields? '}' {pin=1}
 record_fields ::= record_field (',' record_field)* {pin(".*")=1}
-record_field ::= (q_atom | '_') '=' (qualified_atom_expression | expression) {
+record_field ::= (q_atom | q_var) '=' (qualified_atom_expression | expression) {
   pin=1
   methods = [
     getReference

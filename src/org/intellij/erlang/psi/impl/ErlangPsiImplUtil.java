@@ -200,7 +200,9 @@ public class ErlangPsiImplUtil {
 
   @Nullable
   private static PsiReference getRecordFieldReference(@Nullable ErlangQAtom atom) {
-    if (atom == null) return null;
+    ErlangRecordExpression recordExpression = PsiTreeUtil.getParentOfType(atom, ErlangRecordExpression.class);
+    ErlangRecordRef recordRef = recordExpression != null ? recordExpression.getRecordRef() : null;
+    if (recordRef == null || recordRef.getQAtom() == null) return null;
     return new ErlangAtomBasedReferenceImpl<ErlangQAtom>(atom, TextRange.from(0, atom.getTextLength()), atom.getText()) {
       @Override
       public PsiElement resolve() {
@@ -676,7 +678,16 @@ public class ErlangPsiImplUtil {
 
   @Nullable
   public static PsiReference getReference(@NotNull ErlangRecordRef o) {
-    return createRecordRef(o.getQAtom());
+    ErlangQAtom qAtom = o.getQAtom();
+    if (qAtom != null) {
+      return createRecordRef(qAtom);
+    }
+    //this handles references in macro definitions when macro's parameter is used as a record's name
+    ErlangQVar qVar = o.getQVar();
+    if (qVar != null) {
+      return qVar.getReference();
+    }
+    return null;
   }
 
   public static ErlangRecordReferenceImpl<ErlangQAtom> createRecordRef(@NotNull ErlangQAtom atom) {

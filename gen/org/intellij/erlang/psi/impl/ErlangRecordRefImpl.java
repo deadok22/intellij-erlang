@@ -23,9 +23,15 @@ public class ErlangRecordRefImpl extends ErlangCompositeElementImpl implements E
   }
 
   @Override
-  @NotNull
+  @Nullable
   public ErlangQAtom getQAtom() {
-    return findNotNullChildByClass(ErlangQAtom.class);
+    return findChildByClass(ErlangQAtom.class);
+  }
+
+  @Override
+  @Nullable
+  public ErlangQVar getQVar() {
+    return findChildByClass(ErlangQVar.class);
   }
 
   @Nullable
