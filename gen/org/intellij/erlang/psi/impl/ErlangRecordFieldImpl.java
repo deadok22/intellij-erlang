@@ -52,6 +52,12 @@ public class ErlangRecordFieldImpl extends ErlangCompositeElementImpl implements
     return findChildByType(ERL_OP_EQ);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getUniPattern() {
+    return findChildByType(ERL_UNI_PATTERN);
+  }
+
   @Nullable
   public PsiReference getReference() {
     return ErlangPsiImplUtil.getReference(this);

@@ -109,7 +109,7 @@ q_atom ::= atom | macros_arg | macros {methods=[getReference]}
 q_var ::= '_' | var {
   methods = [getReference processDeclarations getName setName getNameIdentifier getUseScope]
 }
-macros_arg ::= '?''?' macros_name
+macros_arg ::= &<<isModeOn "MACRO">> '?''?' macros_name
 macros ::= '?' macros_name {
   pin=1
   methods = [getReference]
@@ -124,11 +124,12 @@ record_definition ::= '-' 'record' '(' q_atom ',' typed_record_fields ')' {
   stubClass="org.intellij.erlang.stubs.ErlangRecordDefinitionStub"
 }
 
-macros_definition ::= '-' 'define' '(' macros_name argument_definition_list? ',' <<guarded macros_body>> ')' {
+macros_definition ::= '-' 'define' '(' macros_name argument_definition_list? ',' <<guarded macro_body>> ')' {
   pin = 2
   methods = [getName setName getNameIdentifier getTextOffset]
   stubClass="org.intellij.erlang.stubs.ErlangMacrosDefinitionStub"
 }
+private macro_body ::= <<enterMode "MACRO">> macros_body <<exitMode "MACRO">>
 macros_body ::= expression ((',' | ';' | '->') expression)* {pin(".*")=1}
 
 include ::= '-' 'include' '(' include_string ')' {
@@ -421,12 +422,12 @@ private record_tail ::= record_head (record_field_ref | record_tuple | ()) {pin=
 private record_head ::= record_head_classic | macros &('{'|record_field_ref &(!('(')))
 private record_head_classic ::= record_hash record_ref {pin=1}
 private record_hash ::= '#' &(!'{')
-record_field_ref ::= '.' (q_atom | q_var) {pin=1 elementType="record_field"}
-record_ref ::= q_atom | q_var {methods = [getReference]}
+record_field_ref ::= '.' (q_atom | macro_arg_var) {pin=1 elementType="record_field"}
+record_ref ::= q_atom | macro_arg_var {methods = [getReference]}
 
 record_tuple ::= '{' record_fields? '}' {pin=1}
 record_fields ::= record_field (',' record_field)* {pin(".*")=1}
-record_field ::= (q_atom | q_var) '=' (qualified_atom_expression | expression) {
+record_field ::= (q_atom | macro_arg_var | '_') '=' (qualified_atom_expression | expression) {
   pin=1
   methods = [
     getReference
@@ -435,6 +436,7 @@ record_field ::= (q_atom | q_var) '=' (qualified_atom_expression | expression) {
   recoverWhile=tuple_recoverer
 }
 private qualified_atom_expression ::= q_atom '.' q_atom {pin=0}
+private macro_arg_var ::= &<<isModeOn "MACRO">> q_var
 module_ref ::= q_atom {
   methods = [getReference]
 }

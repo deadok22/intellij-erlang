@@ -87,4 +87,5 @@ public class ErlangParserTest extends ErlangParserTestBase {
   public void testMapTypes()          { doTest(true, false); }
   public void testComprehensions()    { doTest(true, false); }
   public void testMacrosHacks()       { doTest(true, false); }
+  public void testMacroBodyOnlyPsi()  { doTest(true, true); }
 }
