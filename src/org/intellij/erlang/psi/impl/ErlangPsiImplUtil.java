@@ -677,7 +677,7 @@ public class ErlangPsiImplUtil {
   @NotNull
   public static PsiReference createModuleReference(@NotNull ErlangQAtom atom) {
     String name = StringUtil.unquoteString(atom.getText());
-    return new ErlangModuleReferenceImpl<ErlangQAtom>(atom, TextRange.from(0, atom.getTextLength()), name);
+    return new ErlangModuleReferenceImpl<ErlangQAtom>(atom, getTextRangeForReference(atom), name);
   }
 
   @NotNull
@@ -726,7 +726,7 @@ public class ErlangPsiImplUtil {
     ErlangModuleStub stub = o.getStub();
     if (stub != null) return StringUtil.notNullize(stub.getName());
     ErlangQAtom atom = o.getQAtom();
-    return atom == null ? "" : atom.getText();
+    return atom == null ? "" : StringUtil.unquoteString(atom.getText());
   }
 
   @NotNull
