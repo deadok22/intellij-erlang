@@ -262,7 +262,7 @@ public class ErlangCompletionContributor extends CompletionContributor {
 
         Collection<ErlangQVar> vars = new THashSet<ErlangQVar>();
         ErlangFunctionClause clause = PsiTreeUtil.getParentOfType(expression, ErlangFunctionClause.class);
-        ((ErlangVariableReferenceImpl) reference).populateVariables(clause, vars);
+        ErlangVariableCompletionContributor.populateVariables(vars, var, clause);
 
         for (ErlangQVar v : vars) {
           if (inLeftPartOfAssignment(v, true)) {
